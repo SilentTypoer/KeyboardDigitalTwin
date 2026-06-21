@@ -1,6 +1,7 @@
 # SilentTypœr
 # 2026
 # Keyboard digital twin that starts recording from the first key press.
+# Press escape (ESC) key to stop recording.
 
 import pygame
 from pynput import keyboard
@@ -8,8 +9,6 @@ import cv2
 import numpy as np
 from pathlib import Path
 import numpy as np
-import pygetwindow as gw
-import mss
 
 
 class Key:
@@ -301,14 +300,15 @@ if __name__ == "__main__":
                     closeWindow = True
                     if not hasStartedRecording:
                         writer.release()
-                        windowRecorder.release()
                         twinRecFilePath.unlink(missing_ok=True)
-                        Path("videos/keytest" + str(outputIndex) + ".mp4").unlink(
-                            missing_ok=True
-                        )
-                    if writer.isOpened() or windowRecorder.isOpened():
+                    if writer.isOpened():
                         writer.release()
-                        windowRecorder.release()
+                else:
+                    isRecording = False
+                    writer.release()
+                    if not hasStartedRecording:
+                        twinRecFilePath.unlink(missing_ok=True)
+                    closeWindow = True
             elif event.type == pygame.VIDEORESIZE:
                 width = setWidth()
                 setup()
